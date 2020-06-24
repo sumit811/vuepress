@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
     posts: [],
     postDetail:{},
     postLink:{},
+    loading: true
   },
   getters: {
     allPosts: state => state.posts,
@@ -21,25 +22,30 @@ export const store = new Vuex.Store({
       axios.get(
         'http://localhost/wordpress/wp-json/wp/v2/posts' 
       ).then(response => { 
-        console.log(response.data);
+        // console.log(response.data);
         commit("setBlogs", response.data);
+        commit('changeLoadingState', false);
       });
     },
     fetchOnePost({ commit }, qs){
-      console.log('fetchOnePost');
-      console.info(qs);
+      // console.log('fetchOnePost');
+      // console.info(qs);
         axios.get('http://localhost/wordpress/wp-json/wp/v2/posts/'+qs.id).then(response => {
-            console.log('fetchOnePost start');
-            console.dir(response.data);
-            console.log('fetchOnePost end');
+            // console.log('fetchOnePost start');
+            // console.dir(response.data);
+            // console.log('fetchOnePost end');
             commit("oneBlog",response.data);
+            commit('changeLoadingState', false);
         }).catch(err => {
           console.dir(err);
-        }).finally(() => console.log('fetchOnePost completed'));
+        })
+        // .finally(() => console.log('fetchOnePost completed')
+        // );
     }
   },
   mutations: {
     setBlogs: (state, posts) => (state.posts = posts),
-    oneBlog: (state, postDetail) => (state.postDetail = postDetail)
+    oneBlog: (state, postDetail) => (state.postDetail = postDetail),
+    changeLoadingState: (state, loading) => (state.loading = loading)
   }
 });

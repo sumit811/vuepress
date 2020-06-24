@@ -1,19 +1,32 @@
 <template>
     <article class="text-left">
         <div>Route ID = {{this.$route.params.id}}</div>
-        <h2>{{onePost.title.rendered}}</h2>
-        <h4>{{onePost.author}}</h4>
-        <div>{{onePost.content.rendered}}</div>
+            <div v-if="loading">
+                loading...
+            </div>
+            <div v-else>
+                <h2>{{postDetail.title.rendered}}</h2>
+                <h4>{{postDetail.author}}</h4>
+                <div v-html="postDetail.content.rendered"></div>
+            </div>
     </article>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+// import { mapGetters, mapActions } from "vuex";
 export default {
-  computed: mapGetters(["onePost"]),
-  methods: {
-    ...mapActions(["fetchOnePost"])
+  computed: {
+       postDetail(){
+        //    console.dir(this.$store.state.postDetail);
+           return this.$store.state.postDetail;
+       },
+       loading(){
+           return this.$store.state.loading;
+       }
   },
+//   methods: {
+//     ...mapActions(["fetchOnePost"])
+//   },
   created(){
     // this.fetchOnePost(this.$route.params.id);
     this.$store.dispatch( 'fetchOnePost', {
@@ -22,10 +35,10 @@ export default {
   },
   watch: {
       $route(to, from){
-          console.info('to - ',to);
-          console.info('from - ',from);
+        //   console.info('to - ',to);
+        //   console.info('from - ',from);
           if(to.name === from.name){
-              console.warn('Same Post Component');
+            //   console.warn('Same Post Component');
               this.$store.dispatch( 'fetchOnePost', {
                 id: this.$route.params.id
               });
