@@ -15,13 +15,14 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        {{ navMenu['header-menu'].items }}
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <router-link v-bind:to="'/'" class="nav-link">VuePress <span class="sr-only">(current)</span></router-link>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
+          <!-- <li class="nav-item" v-for="(link,index) in navMenu['header-menu'].items" :key="index">
+            <a class="nav-link" href="#">{{link.title}}</a>
+          </li> -->
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -39,9 +40,6 @@
               <a class="dropdown-item" href="#">Something else here</a>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input
@@ -58,7 +56,39 @@
 </template>
 
 <script>
-export default {};
+// import { mapState } from 'vuex'
+export default {
+  data() {
+    return {
+      navMenu:{}
+    }
+  },
+  beforeCreate(){
+    console.log('beforeCreate');
+    console.dir(this.$store.state.menus);
+  },
+  created(){
+    console.log('created');
+    this.navMenu = this.$store.state.menus
+    console.dir(this.$store.state.menus);
+  },
+  beforeMount(){
+    console.log('beforeMount');
+    console.dir(this.$store.state.menus);
+  },
+  mounted(){
+    console.log('mounted');
+    console.dir(this.$store.state.menus);
+  },
+  
+  
+  // computed: mapState({
+  //   navMenu: state => {
+  //     console.log('header mapstate')
+  //     state.menus
+  //   },
+  // })
+};
 </script>
 
 <style>

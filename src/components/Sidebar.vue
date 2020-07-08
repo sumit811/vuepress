@@ -6,6 +6,14 @@
         <router-link v-bind:to='{name: "Post", params:{id: post.id}}'>{{post.title.rendered}}</router-link>
         </li>
     </ul>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Categories List
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="#" v-for="(category,index) in categoriesGetters" :key="index">{{ category.name }}</a>
+      </div>
+    </div>
     <ul class="nav flex-column">
       <li class="nav-item">
         <a class="nav-link active" href="#">Active</a>
@@ -20,20 +28,29 @@
         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
       </li>
     </ul>
+    <Tags />
   </aside>
 </template>
 
 <script>
+
+import Tags from "./Tags.vue";
 import { mapGetters, mapActions } from "vuex";
 export default {
-  computed: mapGetters(["allPosts"]),
+  components:{
+    Tags
+  },
+  computed: mapGetters(["allPosts","categoriesGetters","tagsGetter"]),
   methods: {
-    ...mapActions(["fetchPosts"])
+    ...mapActions(["fetchPosts","fetchCategories","fetchTags"])
   },
   created(){
       this.fetchPosts();
+      this.$store.dispatch('fetchCategories');
+      this.$store.dispatch('fetchTags');
   }
 };
+
 </script>
 
 <style>

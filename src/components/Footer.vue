@@ -1,7 +1,11 @@
 <template>
   <footer class="footer mt-auto py-3">
     <div class="container">
-      <span class="text-muted">Place sticky footer content here.</span>
+      <ul class="list-inline">
+        <!-- <li class="list-inline-item" v-for="(social,index) in footerMenu['social'].items" :key="index">
+          <a v-bind:href="social.url" target="_blank">{{ social.post_title }}</a>
+        </li> -->
+      </ul>
     </div>
   </footer>
 </template>
@@ -15,7 +19,12 @@
 </style>
 
 <script>
-export default {};
+import { mapState } from 'vuex'
+export default {
+  computed: mapState({
+    footerMenu: state => state.menus,
+  })
+};
 </script>
 
 <style>
