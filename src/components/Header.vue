@@ -15,16 +15,13 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        {{ navMenu['header-menu'].items }}
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <router-link v-bind:to="'/'" class="nav-link">VuePress <span class="sr-only">(current)</span></router-link>
           </li>
-          <!-- <li class="nav-item" v-for="(link,index) in navMenu['header-menu'].items" :key="index">
-            <a class="nav-link" href="#">{{link.title}}</a>
-          </li> -->
-          <li class="nav-item dropdown">
+          <li class="nav-item" v-bind:class="{ dropdown: link.child_items }"  v-for="(link,index) in headerMenu.items" :key="index">
             <a
+              v-if="link.child_items"
               class="nav-link dropdown-toggle"
               href="#"
               id="navbarDropdown"
@@ -32,13 +29,12 @@
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
-            >Dropdown</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
+            >{{link.title}}</a>
+            <div v-if="link.child_items" class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <!-- <a class="dropdown-item" href="{{}}" v-for="(link2,index2) in link.child_items" :key="index2">{{link2.title}}</a> -->
+               <router-link class="dropdown-item" v-for="(link2,index2) in link.child_items" :key="index2" v-bind:to="'/Page/'+link2.object_id">{{link2.title}}</router-link>
             </div>
+            <router-link class="nav-link" v-else v-bind:to="'/Page/'+link.object_id">{{link.title}}</router-link>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -56,39 +52,16 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex'
-export default {
-  data() {
-    return {
-      navMenu:{}
+  export default {
+    computed:{
+      headerMenu(){
+        return this.$store.state.headerMenu;
+      }
+    },
+    created(){
+      this.$store.dispatch('fetchHeaderMenu');
     }
-  },
-  beforeCreate(){
-    console.log('beforeCreate');
-    console.dir(this.$store.state.menus);
-  },
-  created(){
-    console.log('created');
-    this.navMenu = this.$store.state.menus
-    console.dir(this.$store.state.menus);
-  },
-  beforeMount(){
-    console.log('beforeMount');
-    console.dir(this.$store.state.menus);
-  },
-  mounted(){
-    console.log('mounted');
-    console.dir(this.$store.state.menus);
-  },
-  
-  
-  // computed: mapState({
-  //   navMenu: state => {
-  //     console.log('header mapstate')
-  //     state.menus
-  //   },
-  // })
-};
+  }
 </script>
 
 <style>

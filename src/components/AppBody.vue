@@ -23,10 +23,6 @@ export default {
   methods: {
     ...mapActions(["fetchPosts"])
   },
-  created(){
-      // this.fetchPosts();
-      // this.$store.dispatch('fetchPosts');
-  }
 };
 </script>
 

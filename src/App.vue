@@ -18,9 +18,6 @@ import Footer from "./components/Footer.vue";
 
 export default {
   name: "App",
-  created(){
-    this.$store.dispatch( 'fetchMenus');
-  },
   components: {
     Header,
     // Sidebar,

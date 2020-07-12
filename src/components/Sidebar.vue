@@ -40,14 +40,13 @@ export default {
   components:{
     Tags
   },
-  computed: mapGetters(["allPosts","categoriesGetters","tagsGetter"]),
+  computed: mapGetters(["allPosts","categoriesGetters"]),
   methods: {
-    ...mapActions(["fetchPosts","fetchCategories","fetchTags"])
+    ...mapActions(["fetchPosts","fetchCategories"])
   },
   created(){
       this.fetchPosts();
       this.$store.dispatch('fetchCategories');
-      this.$store.dispatch('fetchTags');
   }
 };
 

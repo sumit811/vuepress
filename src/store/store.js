@@ -15,44 +15,39 @@ export const store = new Vuex.Store({
     posts: [],
     postDetail:{},
     postLink:{},
+    page:{},
     categories:[],
     tags: [],
-    menus: {},
+    socialMenu: {},
+    headerMenu: {},
     loading: true,
-    loading_footer_menu: true,
-    loading_header_menu: true,
+    socialMenuLoading: true,
+    pageLoading: true,
   },
   getters: {
+    page: state => state.page,
     allPosts: state => state.posts,
     onePost: state => state.postDetail,
     categoriesGetters: state => state.categories,
     tagsGetter: state => state.tags,
-    menuGetter: state => state.menus,
+    socialMenuGetter: state => state.socialMenus,
+    headerMenuGetter: state => state.headerMenu,
   },
   actions: {
-    fetchMenus({ commit }) {
-      console.log('eeeee');
-      axios.get(
-        menuURL  
-      ).then(response => {
-        // var menuArr = [];
-        console.log('response.data - ',response.data);
-        for(let i of response.data){
-          axios.get(menuURL+i.slug).then(response2 => {
-            console.warn('response2.data - ',response2.data);
-            var menuName = i.slug;
-            var menuData = response2.data;
-            var menuObj= {};
-            menuObj[menuName] = menuData
-            // var menu = {};
-            // menu[i.slug] = response2.data;
-            // console.log(menu);
-            // menuArr.push(menu);
-            commit('setMenus',menuObj);
-          });
-        }
-        
-      });
+    fetchHeaderMenu({ commit }){
+      axios
+      .get(menuURL+'header-menu')
+      .then(response => {
+        commit('setHeaderMenu',response.data);
+      })
+    },
+    fetchSocialMenu({ commit }){
+      axios
+      .get(menuURL+'social')
+      .then(response => {
+        commit('setSocialMenu',response.data);
+        commit('changeLoadingSocialMenuState', false);
+      })
     },
     fetchTags({ commit }) {
       axios.get(
@@ -91,23 +86,33 @@ export const store = new Vuex.Store({
         })
         // .finally(() => console.log('fetchOnePost completed')
         // );
+    },
+    fetchPage({ commit }, qs){
+      console.log('fetchPage');
+      console.info(qs);
+        axios.get(fetchURL+'pages/'+qs.id).then(response => {
+            // console.log('fetchOnePost start');
+            console.dir(response.data);
+            // console.log('fetchOnePost end');
+            commit("page",response.data);
+            commit('changePageLoadingState', false);
+        }).catch(err => {
+          console.dir(err);
+        })
+        // .finally(() => console.log('fetchOnePost completed')
+        // );
     }
   },
   mutations: {
-    setMenus: (state,menuObj) => { 
-      // var a = state;
-      //var menuObj = {};
-      for (const [key, value] of Object.entries(menuObj)) {
-        state.menus[key] = value;
-      } 
-      return state.menus ;
-    },
+    setHeaderMenu: (state, headerMenu) => (state.headerMenu = headerMenu),
+    setSocialMenu: (state, socialMenu) => (state.socialMenu = socialMenu),
     setTags: (state, tags) => (state.tags = tags),
     setCategories: (state, categories) => (state.categories = categories),
     setBlogs: (state, posts) => (state.posts = posts),
     oneBlog: (state, postDetail) => (state.postDetail = postDetail),
+    page: (state, page) => (state.page = page),
     changeLoadingState: (state, loading) => (state.loading = loading),
-    changeHeaderMenuLoadingState: (state, loading_header_menu) => (state.loading_header_menu = loading_header_menu),
-    changeFooterMenuLoadingState: (state, loading_footer_menu) => (state.loading_footer_menu = loading_footer_menu),
+    changePageLoadingState: (state, pageLoading) => (state.pageLoading = pageLoading),
+    changeLoadingSocialMenuState: (state, socialMenuLoading) => (state.socialMenuLoading = socialMenuLoading),
   }
 });
