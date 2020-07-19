@@ -11,7 +11,7 @@
         Categories List
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#" v-for="(category,index) in categoriesGetters" :key="index">{{ category.name }}</a>
+        <router-link class="dropdown-item" v-for="(category,index) in categoriesGetters" :key="index" v-bind:to='{name: "Category", params:{id: category.id}}'>{{category.name}}</router-link>
       </div>
     </div>
     <ul class="nav flex-column">

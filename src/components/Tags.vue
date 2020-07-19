@@ -2,7 +2,7 @@
   <ul class="list-inline">
     <h5>Tags</h5>
       <li class="list-inline-item" v-for="(tag,index) in tagsGetter" :key="index">
-          <a href="#">{{tag.name}}</a>
+          <router-link v-bind:to='{name: "Tags", params:{id: tag.id}}'>{{tag.name}}</router-link>
       </li>
   </ul>
 </template>
@@ -12,11 +12,12 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
 export default {
-  computed: mapGetters(["tagsGetter"]),
-  methods: {
-    ...mapActions(["fetchTags"])
+  // computed: mapGetters(["tagsGetter"]),
+  computed:{
+      tagsGetter(){
+        return this.$store.state.tags;
+      }
   },
   created(){
       this.$store.dispatch('fetchTags');

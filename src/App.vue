@@ -3,6 +3,7 @@
     <Header/>
     <router-view></router-view>
     <Footer/>
+    <Modal />
   </div>
 </template>
 
@@ -15,13 +16,15 @@
 import Header from "./components/Header.vue";
 // import Sidebar from "./components/Sidebar.vue";
 import Footer from "./components/Footer.vue";
+import Modal from "./components/Modal.vue";
 
 export default {
   name: "App",
   components: {
     Header,
     // Sidebar,
-    Footer
+    Footer,
+    Modal
   }
 };
 </script>

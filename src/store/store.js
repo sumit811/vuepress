@@ -9,10 +9,16 @@ Vue.use(Vuex);
 var baseURL = 'http://localhost/wordpress/wp-json'
 var fetchURL = baseURL+'/wp/v2/';
 var menuURL = baseURL+'/menus/v1/menus/';
+// var wpUrl = 'http://localhost/wordpress/wp-json/wp/v2/users';
+// var wpAdmUser = 'admin';
+// var wpAdmPass = 'admin';
+var loginurl = 'http://localhost/wordpress/wp-json/wp/v2/users/me';
 
 export const store = new Vuex.Store({
   state: {
+    user:{},
     posts: [],
+    postList:[],
     postDetail:{},
     postLink:{},
     page:{},
@@ -23,9 +29,13 @@ export const store = new Vuex.Store({
     loading: true,
     socialMenuLoading: true,
     pageLoading: true,
+    modalName:'',
   },
   getters: {
+    getUser: state => state.user,
+    getModalName: state => state.modalName,
     page: state => state.page,
+    postListGetters: state => state.postList,
     allPosts: state => state.posts,
     onePost: state => state.postDetail,
     categoriesGetters: state => state.categories,
@@ -34,10 +44,50 @@ export const store = new Vuex.Store({
     headerMenuGetter: state => state.headerMenu,
   },
   actions: {
+    fetchUser({commit},user){
+      console.dir(user);
+      axios
+      .post(loginurl,{
+        auth:{
+          'username':user.username,
+          'password':user.password
+        }
+        },
+        {
+          headers: {
+            'Authorization': 'Basic c3Vic2NyaWJlcjphYmNkMTIzNA=='
+          }
+        }
+        )
+      .then(response => {
+        console.dir(response);
+        commit('setUser', response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+      // commit('setUser');
+    },
+    fetchModal({ commit} ,m){
+      commit('setModal', m);
+    },
+    fetchPostList({ commit }, qs){
+      // console.log(qs);
+      let url = fetchURL+'posts?'+qs.name+'='+qs.id;
+      // console.log('url-',url);
+      axios
+      .get(url)
+      .then(response => {
+        // console.dir(response);
+        commit('setPostList',response.data);
+      })
+    },
     fetchHeaderMenu({ commit }){
       axios
       .get(menuURL+'header-menu')
       .then(response => {
+        //console.dir(response.data);
         commit('setHeaderMenu',response.data);
       })
     },
@@ -104,6 +154,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setUser: (state,user) => (state.user = user),
+    setModal: (state,modal) => (state.modalName = modal),
+    setPostList: (state,postList) => (state.postList = postList),
     setHeaderMenu: (state, headerMenu) => (state.headerMenu = headerMenu),
     setSocialMenu: (state, socialMenu) => (state.socialMenu = socialMenu),
     setTags: (state, tags) => (state.tags = tags),

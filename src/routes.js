@@ -2,6 +2,7 @@ import Home from './views/Home.vue';
 import AppBody from "./components/AppBody.vue";
 import Post from "./components/Post.vue";
 import Page from "./components/Page.vue";
+import PostList from "./components/Post-list.vue";
 import $404 from "./views/404.vue";
 
 export default [
@@ -20,6 +21,21 @@ export default [
                 path: '/Page/:id',
                 name: 'Page',
                 component: Page
+            },
+            {
+                path: '/tags/:id',
+                name: 'Tags',
+                component: PostList
+            },
+            {
+                path: '/categories/:id',
+                name: 'Category',
+                component: PostList
+            },
+            {
+                path: '/Search/:id',
+                name: 'Search',
+                component: PostList
             }
         ]
     },

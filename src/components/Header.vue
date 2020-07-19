@@ -32,30 +32,46 @@
             >{{link.title}}</a>
             <div v-if="link.child_items" class="dropdown-menu" aria-labelledby="navbarDropdown">
               <!-- <a class="dropdown-item" href="{{}}" v-for="(link2,index2) in link.child_items" :key="index2">{{link2.title}}</a> -->
-               <router-link class="dropdown-item" v-for="(link2,index2) in link.child_items" :key="index2" v-bind:to="'/Page/'+link2.object_id">{{link2.title}}</router-link>
+               <router-link class="dropdown-item" v-for="(link2,index2) in link.child_items" :key="index2" v-bind:to="'/'+link2.object+'/'+link2.object_id">{{link2.title}}-{{link2.object}}</router-link>
             </div>
-            <router-link class="nav-link" v-else v-bind:to="'/Page/'+link.object_id">{{link.title}}</router-link>
+            <router-link class="nav-link" v-else v-bind:to="'/'+link.object+'/'+link.object_id">{{link.title}}</router-link>
+          </li>
+          <li>
+            <div class="dropdown">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                User
+              </a>
+
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="#" v-on:click="openModal('create_account')">Create Account</a>
+                <a class="dropdown-item" href="#" v-on:click="openModal('forget_password')">Forget Password</a>
+                <a class="dropdown-item" href="#" v-on:click="openModal('log_in')">Log in</a>
+              </div>
+            </div>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input
-            class="form-control mr-sm-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          >
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        <Search />
       </div>
     </div>
   </nav>
 </template>
 
 <script>
+import Search from './Search.vue';
   export default {
+    components:{
+      Search
+    },
     computed:{
       headerMenu(){
         return this.$store.state.headerMenu;
+      }
+    },
+    methods:{
+      openModal: function(m){
+        // console.dir(m);
+        this.$store.dispatch('fetchModal',m);
+        window.$('#signup').modal();
       }
     },
     created(){
