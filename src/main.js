@@ -3,6 +3,7 @@ import App from './App.vue'
 import jQuery from 'jquery'
 import VueRouter from 'vue-router'
 import Routes from './routes'
+import Vuelidate from 'vuelidate'
 import {store} from './store/store';
 
 window.$ = window.jQuery = jQuery
@@ -11,6 +12,7 @@ import 'bootstrap'
 // import './assets/scss/app.scss'
 // import 'bootstrap/dist/css/bootstrap.min.css';// but cannot use bootstrap variables
 Vue.use(VueRouter);
+Vue.use(Vuelidate);
 
 Vue.config.productionTip = false
 
