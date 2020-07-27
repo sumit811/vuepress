@@ -42,7 +42,19 @@ export default {
             });
             }
             e.preventDefault();
+        },
+        reset_vuelidate:function(){
+          this.$v.$reset();
+        },
+        modalHide:function(){
+          const that = this;
+          window.$('#signup').on('hidden.bs.modal', function () {
+            that.reset_vuelidate();
+          })
         }
+    },
+    mounted(){
+      this.modalHide()
     },
     validations:{
       email: {
