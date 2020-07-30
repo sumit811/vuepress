@@ -12,10 +12,11 @@ var menuURL = baseURL+'/menus/v1/menus/';
 // var wpUrl = 'http://localhost/wordpress/wp-json/wp/v2/users';
 // var wpAdmUser = 'admin';
 // var wpAdmPass = 'admin';
-var loginurl = 'http://localhost/wordpress/wp-json/wp/v2/users/me';
+var loginurl = fetchURL+'users/me';
 
 export const store = new Vuex.Store({
   state: {
+    loggedinStatus: false,
     user:{},
     posts: [],
     postList:[],
@@ -32,6 +33,7 @@ export const store = new Vuex.Store({
     modalName:'',
   },
   getters: {
+    getloggedinStatus: state => state.loggedinStatus,
     getUser: state => state.user,
     getModalName: state => state.modalName,
     page: state => state.page,
@@ -44,27 +46,47 @@ export const store = new Vuex.Store({
     headerMenuGetter: state => state.headerMenu,
   },
   actions: {
+    logout: ({commit}) => {
+      localStorage.removeItem('loggedinVue');
+      commit('setLoginStatus',false);
+      commit('setUserNull');
+    },
+    fetchLoggedinStatus({commit}){
+      if(localStorage.getItem("loggedinVue")){
+        var login = JSON.parse(localStorage.getItem("loggedinVue"));
+        if(login.status === "success"){
+          commit('setLoginStatus',true);
+        } else {
+          commit('setLoginStatus',false);
+        } 
+      }
+    },
     fetchUser({commit},user){
-      console.dir(user);
-      axios
-      .post(loginurl,{
-        auth:{
-          'username':user.username,
-          'password':user.password
+      // console.dir(user);
+      console.warn('loginurl-',loginurl);
+      let auth = window.btoa(user.email + ':' + user.password);
+      // console.log(auth);
+      //Authorization':'Basic c3Vic2NyaWJlcjphYmNkMTIzNA=='
+      axios.post(loginurl,{},{
+        headers: {
+          'Authorization': 'Basic '+auth
         }
-        },
-        {
-          headers: {
-            'Authorization': 'Basic c3Vic2NyaWJlcjphYmNkMTIzNA=='
-          }
-        }
-        )
+      })
       .then(response => {
-        console.dir(response);
-        commit('setUser', response.data);
+        // console.info('-------------loggedin user detail------------ START');
+        // console.dir(response.data);
+        // console.info('-------------loggedin user detail------------ END');
+        response.data.message='You have you successfully loggedin!';
+        commit('setUser', {status:'success',data:response.data});
+        commit('setLoginStatus',true);
+
+        // commit('setUser', response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        commit('setUser', {status:'fail',data:error.response.data});
+        commit('setLoginStatus',false);
+        // commit('setUser', error.response.data);
+        // console.dir(error);
       });
 
       // commit('setUser');
@@ -154,7 +176,19 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
-    setUser: (state,user) => (state.user = user),
+    setLoginStatus: (state,status) => (state.loggedinStatus = status),
+    setUserNull: (state) => (state.user={}),
+    setUser: (state,user) => { 
+      // console.dir(user);
+      localStorage.setItem('loggedinVue', JSON.stringify(user));
+      if(user.status==='success'){
+        state.loggedinStatus = true;
+      }
+      // state.user = user.data;
+      state.user = user;
+      
+      return state.user;
+    },
     setModal: (state,modal) => (state.modalName = modal),
     setPostList: (state,postList) => (state.postList = postList),
     setHeaderMenu: (state, headerMenu) => (state.headerMenu = headerMenu),

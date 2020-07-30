@@ -2,6 +2,7 @@
   <div>
     <h2>Login in</h2>
     <form v-on:submit="login" novalidate><!--was-validated-->
+    <h4 v-if="loggedinUser.data">{{loggedinUser.data.message}}</h4>
       <div class="form-group">
         <label>Email address</label>
         <!-- <input type="text" class="form-control" v-bind:class="{ 'is-invalid':$v.email.$invalid,'is-valid':!$v.email.$invalid }" v-model.trim="email" placeholder="Enter your email" @blur="$v.email.$touch()"> -->
@@ -18,8 +19,10 @@
         <input type="checkbox" class="form-check-input" id="exampleCheck1">
         <label class="form-check-label" for="exampleCheck1">Remember me</label>
       </div> -->
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary float-left">Submit</button>
+      <button type="reset" class="btn float-right" @click="reset">Clear</button>
     </form>
+    <!-- {{ loggedinUser }} -->
   </div>
 </template>
 <script>
@@ -28,18 +31,37 @@ export default {
     data(){
         return{
             email:'',
-            password: ''
+            password: '',
+            msg: ''
+        }
+    },
+    computed:{
+        loggedinUser(){
+          console.dir(this.$store.state.user);
+          return this.$store.state.user;
         }
     },
     methods:{
+        reset: function(){
+          this.reset_vuelidate();
+          this.resetData();
+        },
         login:function(e){
-            console.log('email-'+this.email+' , password - '+this.password);
+            // console.log('email-'+this.email+' , password - '+this.password);
             this.$v.$touch();
             if(!this.$v.invalid){
               this.$store.dispatch( 'fetchUser', {
                   email: this.email,
                   password: this.password
-            });
+              }).then(success =>{
+                window.$('#signup').modal('hide');
+                console.log('sssssss');
+                console.info(success);
+              })
+              .catch(error => {
+                console.log('wwww');
+                console.warn(error);
+              })
             }
             e.preventDefault();
         },
@@ -50,7 +72,12 @@ export default {
           const that = this;
           window.$('#signup').on('hidden.bs.modal', function () {
             that.reset_vuelidate();
+            that.resetData();
           })
+        },
+        resetData: function(){
+          this.email='';
+          this.password='';
         }
     },
     mounted(){

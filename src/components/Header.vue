@@ -43,9 +43,12 @@
               </a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#" v-on:click="openModal('create_account')">Create Account</a>
-                <a class="dropdown-item" href="#" v-on:click="openModal('forget_password')">Forget Password</a>
-                <a class="dropdown-item" href="#" v-on:click="openModal('log_in')">Log in</a>
+                <a class="dropdown-item" v-if="!checkLoggedIn" href="#" v-on:click="openModal('create_account')">Create Account</a>
+                <!-- <a class="dropdown-item" v-if="!checkLoggedIn" href="#" v-on:click="openModal('forget_password')">Forget Password</a> -->
+                <a class="dropdown-item" v-if="!checkLoggedIn" href="#" v-on:click="openModal('log_in')">Log in</a>
+                <a class="dropdown-item" v-if="checkLoggedIn" href="#">Submit Post</a>
+                <a class="dropdown-item" v-if="checkLoggedIn" href="#">Profile</a>
+                <a class="dropdown-item" v-if="checkLoggedIn" href="#" @click="logout">Log Out</a>
               </div>
             </div>
           </li>
@@ -65,9 +68,15 @@ import Search from './Search.vue';
     computed:{
       headerMenu(){
         return this.$store.state.headerMenu;
+      },
+      checkLoggedIn(){
+        return this.$store.state.loggedinStatus;
       }
     },
     methods:{
+      logout: function(){
+        this.$store.dispatch('logout');
+      },
       openModal: function(m){
         // console.dir(m);
         this.$store.dispatch('fetchModal',m);

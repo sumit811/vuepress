@@ -25,6 +25,9 @@ export default {
     // Sidebar,
     Footer,
     Modal
+  },
+  created(){
+    this.$store.dispatch('fetchLoggedinStatus');
   }
 };
 </script>
