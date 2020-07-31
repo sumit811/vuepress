@@ -12,12 +12,14 @@ var menuURL = baseURL+'/menus/v1/menus/';
 // var wpUrl = 'http://localhost/wordpress/wp-json/wp/v2/users';
 // var wpAdmUser = 'admin';
 // var wpAdmPass = 'admin';
-var loginurl = fetchURL+'users/me';
+var userurl = fetchURL+'users';
+var loginurl = userurl+'/me';
 
 export const store = new Vuex.Store({
   state: {
     loggedinStatus: false,
     user:{},
+    newUser:{},
     posts: [],
     postList:[],
     postDetail:{},
@@ -33,6 +35,7 @@ export const store = new Vuex.Store({
     modalName:'',
   },
   getters: {
+    newUser: state => state.newUser,
     getloggedinStatus: state => state.loggedinStatus,
     getUser: state => state.user,
     getModalName: state => state.modalName,
@@ -46,6 +49,21 @@ export const store = new Vuex.Store({
     headerMenuGetter: state => state.headerMenu,
   },
   actions: {
+    newUserAction({commit},userDetail){
+      // console.dir('userDetail-',userDetail);
+      axios.post(userurl,userDetail,{
+        headers: {
+          'Authorization': 'Basic YWRtaW46YWRtaW4='
+        }
+      }).then(response => {
+        console.dir(response);
+        commit('setNewUser',response);
+      }).catch(error =>{
+        console.dir(error);
+        commit('setNewUser',error);
+      });
+      
+    },
     logout: ({commit}) => {
       localStorage.removeItem('loggedinVue');
       commit('setLoginStatus',false);
@@ -176,6 +194,14 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setNewUser: (state,newUser) => (state.newUser = newUser),
+    // setNewUser: (state,newUser) => {
+    //   console.log('New-user mutations');
+    //   console.dir(newUser);
+    //   state.newUser = newUser;
+    //   return state.newUser;
+    //   //state.newUser = newUser
+    // },
     setLoginStatus: (state,status) => (state.loggedinStatus = status),
     setUserNull: (state) => (state.user={}),
     setUser: (state,user) => { 
