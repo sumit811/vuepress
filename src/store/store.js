@@ -9,6 +9,7 @@ Vue.use(Vuex);
 var baseURL = 'http://localhost/wordpress/wp-json'
 var fetchURL = baseURL+'/wp/v2/';
 var menuURL = baseURL+'/menus/v1/menus/';
+var commentUrl = baseURL + '/wp/v2/comments/?p=';
 // var wpUrl = 'http://localhost/wordpress/wp-json/wp/v2/users';
 // var wpAdmUser = 'admin';
 // var wpAdmPass = 'admin';
@@ -33,6 +34,7 @@ export const store = new Vuex.Store({
     socialMenuLoading: true,
     pageLoading: true,
     modalName:'',
+    comments:{}
   },
   getters: {
     newUser: state => state.newUser,
@@ -47,6 +49,7 @@ export const store = new Vuex.Store({
     tagsGetter: state => state.tags,
     socialMenuGetter: state => state.socialMenus,
     headerMenuGetter: state => state.headerMenu,
+    getComment: state => state.comments
   },
   actions: {
     newUserAction({commit},userDetail){
@@ -74,6 +77,7 @@ export const store = new Vuex.Store({
         var login = JSON.parse(localStorage.getItem("loggedinVue"));
         if(login.status === "success"){
           commit('setLoginStatus',true);
+          commit('setUser', JSON.parse(localStorage.getItem("loggedinVue")));
         } else {
           commit('setLoginStatus',false);
         } 
@@ -191,6 +195,16 @@ export const store = new Vuex.Store({
         })
         // .finally(() => console.log('fetchOnePost completed')
         // );
+    },
+    fetchComments({ commit }, ps){
+      // console.log(commentUrl+ps.id);
+      axios.get(commentUrl+ps.id)
+      .then(response => {
+        // console.dir(response.data);
+        commit("setComments",response.data);
+      }).catch(err => {
+        console.dir(err);
+      })
     }
   },
   mutations: {
@@ -227,5 +241,6 @@ export const store = new Vuex.Store({
     changeLoadingState: (state, loading) => (state.loading = loading),
     changePageLoadingState: (state, pageLoading) => (state.pageLoading = pageLoading),
     changeLoadingSocialMenuState: (state, socialMenuLoading) => (state.socialMenuLoading = socialMenuLoading),
+    setComments: (state, c) => (state.comments = c),
   }
 });

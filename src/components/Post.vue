@@ -8,13 +8,17 @@
                 <h2>{{postDetail.title.rendered}}</h2>
                 <h4>{{postDetail.author}}</h4>
                 <div v-html="postDetail.content.rendered"></div>
+                <Comment/>
             </div>
     </article>
 </template>
 
 <script>
-// import { mapGetters, mapActions } from "vuex";
+import Comment from './Comment';
 export default {
+  components:{
+      Comment
+  },  
   computed: {
        postDetail(){
         //    console.dir(this.$store.state.postDetail);

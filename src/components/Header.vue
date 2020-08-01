@@ -47,7 +47,7 @@
                 <!-- <a class="dropdown-item" v-if="!checkLoggedIn" href="#" v-on:click="openModal('forget_password')">Forget Password</a> -->
                 <a class="dropdown-item" v-if="!checkLoggedIn" href="#" v-on:click="openModal('log_in')">Log in</a>
                 <a class="dropdown-item" v-if="checkLoggedIn" href="#">Submit Post</a>
-                <a class="dropdown-item" v-if="checkLoggedIn" href="#">Profile</a>
+                <router-link class="dropdown-item" v-bind:to="'/Profile/'">Profile</router-link>
                 <a class="dropdown-item" v-if="checkLoggedIn" href="#" @click="logout">Log Out</a>
               </div>
             </div>

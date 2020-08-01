@@ -1,1 +1,13 @@
-// $body-bg: green;
+.commentOuter{
+    text-align: left;
+    overflow: auto;
+    form{
+        text-align: center;
+    }
+    .comment-box{
+        text-align: left;
+        .btn{
+            margin-top: 20px;
+        }
+    }
+}

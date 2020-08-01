@@ -3,6 +3,7 @@ import AppBody from "./components/AppBody.vue";
 import Post from "./components/Post.vue";
 import Page from "./components/Page.vue";
 import PostList from "./components/Post-list.vue";
+import Profile from "./components/Profile.vue";
 import $404 from "./views/404.vue";
 
 export default [
@@ -36,6 +37,11 @@ export default [
                 path: '/Search/:id',
                 name: 'Search',
                 component: PostList
+            },
+            {
+                path: '/Profile/',
+                name: 'Profile',
+                component: Profile
             }
         ]
     },
