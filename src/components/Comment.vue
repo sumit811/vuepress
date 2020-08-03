@@ -1,13 +1,16 @@
 <template>
   <div class="commentOuter" v-if="checkLoggedIn">
-    <ComponentList />
+    <ComponentList/>
     <form @submit="commentFrm">
       <h1>Leave a Reply</h1>
-      <h3>Logged in as admin. <a href="#" @click="logout">Log out?</a></h3>
+      <h3>
+        Logged in as {{ userDetail.data.name }}.
+        <a href="#" @click="logout">Log out?</a>
+      </h3>
       <div class="comment-box">
         <div class="form-group">
-          <label for="exampleFormControlTextarea1">Example textarea</label>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+          <label for="exampleFormControlTextarea1">Comment</label>
+          <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" v-model="comment"></textarea>
           <button type="submit" class="btn btn-danger">Post Comment</button>
         </div>
       </div>
@@ -15,20 +18,33 @@
   </div>
 </template>
 <script>
-import ComponentList from './Comments-list';
+console.log('sadfsdafsadf');
+import ComponentList from "./Comments-list";
 export default {
-  components:{
+  data(){
+    return{
+      comment:''
+    }
+  },
+  components: {
     ComponentList
   },
-  computed:{
-    checkLoggedIn(){
-        return this.$store.state.loggedinStatus;
-      }
+  computed: {
+    checkLoggedIn() {
+      return this.$store.state.loggedinStatus;
+    },
+    userDetail(){
+      return this.$store.getters.getUser
+    }
   },
   methods: {
     commentFrm: function(e) {
-      alert("ddd");
       e.preventDefault();
+      this.$store.dispatch("postComments", {
+        content: this.comment,
+        post: this.$route.params.id,
+        parent:0
+      });
     },
     logout: function() {
       this.$store.dispatch("logout");

@@ -9,7 +9,7 @@ Vue.use(Vuex);
 var baseURL = 'http://localhost/wordpress/wp-json'
 var fetchURL = baseURL+'/wp/v2/';
 var menuURL = baseURL+'/menus/v1/menus/';
-var commentUrl = baseURL + '/wp/v2/comments/?p=';
+var commentUrl = baseURL + '/wp/v2/comments/';
 // var wpUrl = 'http://localhost/wordpress/wp-json/wp/v2/users';
 // var wpAdmUser = 'admin';
 // var wpAdmPass = 'admin';
@@ -86,12 +86,12 @@ export const store = new Vuex.Store({
     fetchUser({commit},user){
       // console.dir(user);
       console.warn('loginurl-',loginurl);
-      let auth = window.btoa(user.email + ':' + user.password);
+      let auth = 'Basic '+window.btoa(user.email + ':' + user.password);
       // console.log(auth);
       //Authorization':'Basic c3Vic2NyaWJlcjphYmNkMTIzNA=='
       axios.post(loginurl,{},{
         headers: {
-          'Authorization': 'Basic '+auth
+          'Authorization': auth
         }
       })
       .then(response => {
@@ -99,6 +99,7 @@ export const store = new Vuex.Store({
         // console.dir(response.data);
         // console.info('-------------loggedin user detail------------ END');
         response.data.message='You have you successfully loggedin!';
+        response.auth = auth;
         commit('setUser', {status:'success',data:response.data});
         commit('setLoginStatus',true);
 
@@ -198,13 +199,35 @@ export const store = new Vuex.Store({
     },
     fetchComments({ commit }, ps){
       // console.log(commentUrl+ps.id);
-      axios.get(commentUrl+ps.id)
+      // http://localhost/wordpress/wp-json/wp/v2/comments?post=68
+      commentUrl = commentUrl+'?post='+ps.id;
+      console.log('commentUrl-',commentUrl);
+      axios.get(commentUrl)
       .then(response => {
         // console.dir(response.data);
         commit("setComments",response.data);
       }).catch(err => {
         console.dir(err);
       })
+    },
+    postComments({ commit }, cd){
+      console.dir(cd);
+      cd.author = this.state.user.data.username;
+      cd.author_email = this.state.user.data.email;
+      cd.author_name = this.state.user.data.name;
+      console.warn('------------------');
+      console.dir(cd);
+      axios.post(commentUrl,cd,{
+        headers: {
+          'Authorization': this.state.user.data.auth
+        }
+      }).then(response => {
+        console.dir(response);
+        commit('setNewUser',response);
+      }).catch(error =>{
+        console.dir(error);
+        commit('setNewUser',error);
+      });
     }
   },
   mutations: {
