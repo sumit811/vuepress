@@ -15,6 +15,7 @@ var commentUrl = baseURL + '/wp/v2/comments/';
 // var wpAdmPass = 'admin';
 var userurl = fetchURL+'users';
 var loginurl = userurl+'/me';
+var submitPostUrl = fetchURL+'posts'
 
 export const store = new Vuex.Store({
   state: {
@@ -99,7 +100,7 @@ export const store = new Vuex.Store({
         // console.dir(response.data);
         // console.info('-------------loggedin user detail------------ END');
         response.data.message='You have you successfully loggedin!';
-        response.auth = auth;
+        response.data.auth = auth;
         commit('setUser', {status:'success',data:response.data});
         commit('setLoginStatus',true);
 
@@ -227,6 +228,25 @@ export const store = new Vuex.Store({
       }).catch(error =>{
         console.dir(error);
         commit('setNewUser',error);
+      });
+    },
+    submitPost({ commit }, cd){
+      // console.dir(cd);
+      // cd.author = this.state.user.data.username;
+      // cd.author_email = this.state.user.data.email;
+      // cd.author_name = this.state.user.data.name;
+      // console.warn('------------------');
+      console.dir(cd);
+      axios.post(submitPostUrl,cd,{
+        headers: {
+          'Authorization': this.state.user.data.auth
+        }
+      }).then(response => {
+        console.dir(response);
+        commit('setNewUser',response);
+      }).catch(error =>{
+        console.dir(error);
+        // commit('setNewUser',error);
       });
     }
   },

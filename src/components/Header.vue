@@ -46,8 +46,9 @@
                 <a class="dropdown-item" v-if="!checkLoggedIn" href="#" v-on:click="openModal('create_account')">Create Account</a>
                 <!-- <a class="dropdown-item" v-if="!checkLoggedIn" href="#" v-on:click="openModal('forget_password')">Forget Password</a> -->
                 <a class="dropdown-item" v-if="!checkLoggedIn" href="#" v-on:click="openModal('log_in')">Log in</a>
-                <a class="dropdown-item" v-if="checkLoggedIn" href="#">Submit Post</a>
-                <router-link class="dropdown-item" v-bind:to="'/Profile/'">Profile</router-link>
+                <!-- <a class="dropdown-item" v-if="checkLoggedIn" href="#">Submit Post</a> -->
+                <router-link v-if="checkLoggedIn" class="dropdown-item" v-bind:to="'/Create-a-post/'">Submit Post</router-link>
+                <router-link v-if="checkLoggedIn" class="dropdown-item" v-bind:to="'/Profile/'">Profile</router-link>
                 <a class="dropdown-item" v-if="checkLoggedIn" href="#" @click="logout">Log Out</a>
               </div>
             </div>
@@ -76,6 +77,7 @@ import Search from './Search.vue';
     methods:{
       logout: function(){
         this.$store.dispatch('logout');
+        this.$router.push('/');
       },
       openModal: function(m){
         // console.dir(m);

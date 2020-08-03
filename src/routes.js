@@ -4,6 +4,7 @@ import Post from "./components/Post.vue";
 import Page from "./components/Page.vue";
 import PostList from "./components/Post-list.vue";
 import Profile from "./components/Profile.vue";
+import SubmitPost from "./components/Create-a-post.vue";
 import $404 from "./views/404.vue";
 
 export default [
@@ -42,6 +43,11 @@ export default [
                 path: '/Profile/',
                 name: 'Profile',
                 component: Profile
+            },
+            {
+                path: '/Create-a-post/',
+                name: 'SubmitPost',
+                component: SubmitPost
             }
         ]
     },
