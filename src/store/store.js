@@ -35,7 +35,8 @@ export const store = new Vuex.Store({
     socialMenuLoading: true,
     pageLoading: true,
     modalName:'',
-    comments:{}
+    comments:{},
+    submitPostStatus:{}
   },
   getters: {
     newUser: state => state.newUser,
@@ -236,21 +237,22 @@ export const store = new Vuex.Store({
       // cd.author_email = this.state.user.data.email;
       // cd.author_name = this.state.user.data.name;
       // console.warn('------------------');
-      console.dir(cd);
+      // console.dir(cd);
       axios.post(submitPostUrl,cd,{
         headers: {
           'Authorization': this.state.user.data.auth
         }
       }).then(response => {
-        console.dir(response);
-        commit('setNewUser',response);
+        // console.dir(response);
+        commit('submitPostStatus',{status:true,msg:response.statusText});
       }).catch(error =>{
-        console.dir(error);
-        // commit('setNewUser',error);
+        // console.dir(error);
+        commit('submitPostStatus',{status:false,msg:error.response.data.message});
       });
     }
   },
   mutations: {
+    submitPostStatus:(state,status) => (state.submitPostStatus = status),
     setNewUser: (state,newUser) => (state.newUser = newUser),
     // setNewUser: (state,newUser) => {
     //   console.log('New-user mutations');
