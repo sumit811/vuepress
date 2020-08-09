@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <fragment>
     <h2>Login in</h2>
     <form v-on:submit="login" novalidate><!--was-validated-->
     <h4 v-if="loggedinUser.data">{{loggedinUser.data.message}}</h4>
@@ -23,7 +23,7 @@
       <button type="reset" class="btn float-right" @click="reset">Clear</button>
     </form>
     <!-- {{ loggedinUser }} -->
-  </div>
+  </fragment>
 </template>
 <script>
 import { required,email} from 'vuelidate/lib/validators'

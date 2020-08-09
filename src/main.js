@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import Routes from './routes'
 import Vuelidate from 'vuelidate'
 import {store} from './store/store';
+import Fragment from 'vue-fragment'
 
 window.$ = window.jQuery = jQuery
 import 'popper.js'
@@ -13,6 +14,8 @@ import 'bootstrap'
 // import 'bootstrap/dist/css/bootstrap.min.css';// but cannot use bootstrap variables
 Vue.use(VueRouter);
 Vue.use(Vuelidate);
+Vue.use(Fragment.Plugin);
+
 
 Vue.config.productionTip = false
 

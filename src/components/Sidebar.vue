@@ -29,16 +29,21 @@
       </li>
     </ul>
     <Tags />
+    <ul>
+      <RecentComments/>
+    </ul>
   </aside>
 </template>
 
 <script>
 
 import Tags from "./Tags.vue";
+import RecentComments from "./Recent-comments";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components:{
-    Tags
+    Tags,
+    RecentComments
   },
   computed: mapGetters(["allPosts","categoriesGetters"]),
   methods: {
